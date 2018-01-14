@@ -1,5 +1,0 @@
-﻿  baseSock.cpp
-  main.cpp
-  正在生成代码...
-e:\projects\fucksocket\fucksocket\basesock.cpp(77): warning C4715: “baseSock::init”: 不是所有的控件路径都返回值
-  FuckSocket.vcxproj -> E:\Projects\FuckSocket\Debug\FuckSocket.exe
