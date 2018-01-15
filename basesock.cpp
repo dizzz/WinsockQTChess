@@ -233,9 +233,9 @@ bool BaseSock::ssend(std::string msg) {
 
 bool BaseSock::receiveMsg(std::string &msg) {
     char buff[SOCKMSG_MAX_LENGTH + 10];
-    // qDebug("wait for msg");
+     qDebug("wait for msg");
     int error = recv(ConnectSocket, buff, SOCKMSG_MAX_LENGTH, 0);
-    // qDebug("get msg");
+     qDebug("get msg");
     if (error == SOCKET_ERROR || errno == EPIPE)
         return false;
     msg = buff;

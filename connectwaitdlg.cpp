@@ -20,7 +20,7 @@ ConnectWaitDlg::ConnectWaitDlg(QWidget *parent)
 void ConnectWaitDlg::on_sock_started(){
 
     qDebug("yes!!!!!");
-    QMessageBox::information(this, "Title", "Connected");
+
     accept();
 }
 void ConnectWaitDlg::on_sock_error(){

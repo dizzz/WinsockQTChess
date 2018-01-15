@@ -5,6 +5,7 @@
 #include "sockdata.h"
 #include "string"
 #include <queue>
+#include"QDebug"
 class SockThread : public QThread {
     Q_OBJECT
   public:
@@ -14,7 +15,8 @@ class SockThread : public QThread {
     void sendMsg(std::string msg);
     void sendMsg(int type, std::string msg);
     bool isReceiving() { return receiving; }
-    void setReceiving(bool st) { receiving = st; }
+    void setReceiving(bool st) { receiving = st;
+                               qDebug("set recving:%d",receiving);}
     int getType() { return type; }
     void setType(int st) { type = st; }
     void closesock();

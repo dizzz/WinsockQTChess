@@ -21,15 +21,17 @@ void RPSdlg::judge(){
         //win
         first = 1;
     }
+    qDebug("%d",Common::sockthread->isReceiving());
+    //Common::sockthread->sendMsg(SockData::packRPS(myrps));
     accept();
 }
 void RPSdlg::onGetRPS(int rps){
-
+    qDebug("recvRPS :%d",rps);
     if(rps == myrps){
         QMessageBox::information(this, "Retry", "Retry",
                                   QMessageBox::Ok);
         waiting = false;
-        //accept();
+
         hisrps = myrps=-1;
     }else if(myrps!=-1){
         hisrps = rps;
@@ -48,7 +50,6 @@ void RPSdlg::on_rockbtn_clicked() {
                                   QMessageBox::Ok);
         return;
     }
-    qDebug("rock");
     Common::sockthread->sendMsg(SockData::packRPS(ROCK));
     myrps = ROCK;
     waiting = true;
@@ -68,7 +69,7 @@ void RPSdlg::on_paperbtn_clicked()
                                   QMessageBox::Ok);
         return;
     }
-    qDebug("paper");
+
     Common::sockthread->sendMsg(SockData::packRPS(PAPER));
     myrps = PAPER;
     waiting = true;
@@ -85,7 +86,6 @@ void RPSdlg::on_scissorbtn_clicked()
                                   QMessageBox::Ok);
         return;
     }
-    qDebug("scissor");
     Common::sockthread->sendMsg(SockData::packRPS(SCISSOR));
     myrps = SCISSOR;
     waiting = true;

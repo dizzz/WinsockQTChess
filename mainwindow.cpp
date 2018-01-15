@@ -85,6 +85,7 @@ void MainWindow::whowin(int x,int y){
     }
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *e) {
+    qDebug("is it receving? %d",Common::sockthread->isReceiving());
     qDebug("playing %d",playing);
     if(!playing)
         return;

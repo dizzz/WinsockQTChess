@@ -26,8 +26,6 @@ void SockThread::run() {
             }
         }
         Sleep(1);
-
-
     }
     this->quit();
     this->wait();
@@ -37,7 +35,8 @@ void SockThread::receiveMsg(std::string &str) {
     std::string tmp = "I receive:";
     tmp += str;
     qDebug(tmp.c_str());
-
+    receiving = false;
+    qDebug("i change here!!%d",receiving);
     switch (data.type) {
     case SockData::HELLO:
         // TODO
@@ -46,15 +45,15 @@ void SockThread::receiveMsg(std::string &str) {
         int x, y;
         SockData::getXY(data, x, y);
         emit(recvXY(x, y));
+
         break;
     case SockData::RPS:
-        emit(recvRPS(SockData::getRPS(data)));
-        break;
-    case SockData::READY_FOR_RPS:
-        //emit(recvRPSReady());
+        emit(recvRPS(SockData::getRPS(data)));//首次
+
         break;
     }
-    receiving = false;
+
+
 }
 void SockThread::sendMsg(std::string msg) {
     // sendque.push(SockData::encode(SockData(0, msg)));

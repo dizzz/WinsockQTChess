@@ -5,6 +5,7 @@
 #include "sockthread.h"
 #include <QApplication>
 #include"sockdata.h"
+#include"QMessageBox"
 #include"QDateTime"
 #include"QFile"
 void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -69,12 +70,13 @@ int main(int argc, char *argv[]) {
                 qDebug("play first");
                 Common::sockthread->setReceiving(0);
             } else {
-                qDebug("play seconbd");
+                qDebug("play second");
                 w.setPlaying(0);
                 w.setPlayer(1);
                 Common::sockthread->setReceiving(1);
             }
             w.show();
+            //QMessageBox::information(this, "Title", "Connected");
             return a.exec();
         }
     }else

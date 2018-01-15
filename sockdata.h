@@ -5,7 +5,7 @@
 #include<string>
 class SockData {
   public:
-    enum { HELLO, MOVE,READY_FOR_RPS,RPS };
+    enum { HELLO, MOVE,RPS };
     int type;
     std::string content;
     SockData() {}
@@ -18,6 +18,7 @@ class SockData {
     static void getXY(SockData data,int &x,int &y);
     static std::string packXY(int x, int y);
     static std::string packRPS(int rps);
+    static std::string packRPSReady(int rps);
     static int getRPS(SockData data);
 };
 #endif // SOCKDATA_H
