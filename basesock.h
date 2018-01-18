@@ -26,7 +26,7 @@ class BaseSock {
     // static int RollReceive();
     // static int send(SockData *data);
     static bool ssend(std::string msg);
-    static bool receiveMsg(std::string &msg);
+    static bool sreceive(std::string &msg);
     static void close();
 };
 #endif // BASESOCK_H

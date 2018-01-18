@@ -124,7 +124,7 @@ int BaseSock::init(const char *host, const char *port) {
 
     freeaddrinfo(result);
     if (ConnectSocket == INVALID_SOCKET) {
-        printf("Unable to connect to server!\n");
+        qDebug("Unable to connect to server!\n");
         WSACleanup();
         return err=1;
     }
@@ -133,95 +133,9 @@ int BaseSock::init(const char *host, const char *port) {
     isOpen = true;
     return err=0;
 }
-/*
-int BaseSock::RollReceive() {
-    int iResult;
-    int recvbuflen = 1024;
-    bool isComplete = true;
-    int ID;
-    int length;
-    int lenReaded;
-    int lenLeaved;
-    char content[100000];
-    while (true) {
-        if (!isComplete) {
 
-            iResult = recv(ConnectSocket, content + lenReaded, lenLeaved, 0);
-            if (iResult <= 0) {
-                //qDebug("recv failed with error: %d/n", WSAGetLastError());
-                closesocket(ConnectSocket);
-                break;
-            }
-            lenReaded += iResult;
-            lenLeaved = length - lenReaded;
-            if (lenReaded < length) {
-                isComplete = false;
-            }
-        } else {
-            iResult = recv(ConnectSocket, (char *)&ID, sizeof(int), 0);
-            if (iResult <= 0) {
-                qDebug("recv failed with error 0: %d/n", WSAGetLastError());
-                closesocket(ConnectSocket);
-                break;
-            }
-            iResult = recv(ConnectSocket, (char *)&length, sizeof(int), 0);
-            if (iResult != sizeof(int)) {
-                qDebug("recv failed with error 1: %d/n", WSAGetLastError());
-                closesocket(ConnectSocket);
-                break;
-            }
-            memset(content, 0, length + 1);
-            iResult = recv(ConnectSocket, content, length, 0);
-            if (iResult <= 0) {
-                qDebug("recv failed with error 2: %d/n", WSAGetLastError());
-                closesocket(ConnectSocket);
-                break;
-            }
-            lenReaded = length;
-            lenLeaved = length - lenReaded;
-            if (iResult < length) {
-                isComplete = false;
-            }
-        }
-        if (lenLeaved <= 0) {
-            isComplete = true;
-            BaseSock::SockData sockData;
-            sockData.id = ID;
-            sockData.length = length;
-            sockData.content = content;
-            qDebug("id: %d\ncontent:%s\n", sockData.id,sockData.content);
-            if (sockData.id == 9) {
-                return 1;
-            } else
-                return 2;
-        }
-    }
-    return 0;
-}
-int BaseSock::send(BaseSock::SockData *data) {
-    ::send(ConnectSocket, (char *)&data->id, sizeof(int), 0);
-    ::send(ConnectSocket, (char *)&data->length, sizeof(int), 0);
-    ::send(ConnectSocket, data->content, data->length, 0);
-    return 0;
-}
-*/
 bool BaseSock::ssend(std::string msg) {
-    /*
-    qDebug("ready to send");
-    qDebug()<<msg.c_str();
 
-    if(send(ConnectSocket, msg.c_str(), SOCKMSG_MAX_LENGTH, 0) == SOCKET_ERROR){
-    //char str[10]="sdasd";
-
-    //if(send(ConnectSocket,str,strlen(str),0)==SOCKET_ERROR){
-        qDebug("send error");
-        return 1;
-    }
-
-    qDebug("sent %s",msg.c_str());
-    return 0;*/
-    // if(isInvalid()) qDebug("fucking invaild");
-    // return send(ConnectSocket, msg.c_str(),, 0) != SOCKET_ERROR;
     if (send(ConnectSocket, msg.c_str(), SOCKMSG_MAX_LENGTH, 0) ==
         SOCKET_ERROR) {
         qDebug("error sending %s", msg.c_str());
@@ -231,15 +145,18 @@ bool BaseSock::ssend(std::string msg) {
     return 0;
 }
 
-bool BaseSock::receiveMsg(std::string &msg) {
+bool BaseSock::sreceive(std::string &msg) {
     char buff[SOCKMSG_MAX_LENGTH + 10];
      qDebug("wait for msg");
     int error = recv(ConnectSocket, buff, SOCKMSG_MAX_LENGTH, 0);
-     qDebug("get msg");
-    if (error == SOCKET_ERROR || errno == EPIPE)
-        return false;
+    int len = strlen(buff);
+    qDebug("Basesock get msg %s,length:%d",buff,len);
+
+        qDebug("BaseSock error:%d",error);
+    if (error == SOCKET_ERROR || errno == EPIPE || len <= 0)
+        return 1;
     msg = buff;
-    return true;
+    return 0;
 }
 void BaseSock::close(){
     closesocket(ConnectSocket);

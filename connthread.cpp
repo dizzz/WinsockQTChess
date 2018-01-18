@@ -18,6 +18,7 @@ void ConnThread::run() {
     }
 }
 ConnThread::~ConnThread(){
+    BaseSock::close();
     quit();
     wait();
 }

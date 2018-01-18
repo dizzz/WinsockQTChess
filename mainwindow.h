@@ -15,9 +15,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
+    enum{
+        NOT_SET,YES,NO
+    };
     void paintEvent(QPaintEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void startplay();
@@ -27,23 +30,26 @@ public:
     void setPlaying(int t);
     int getPlaying();
     void whowin(int x,int y);
+    void post_game();
+    void on_send_newgame();
+    void newgame();
+    void init();
   private:
     Ui::MainWindow *ui;
     int colorflag;
     int a[3][3];
     int isWin(int, int);
-    int f1(int, int);
-    int f2(int, int);
-    int f3(int, int);
-    int f4(int, int);
     bool hasRoom();
     int player;
     int playing;
     //int playertype;
-
+    int mynewgame;
+    int hisnewgame;
    private slots:
     void showinf();
     void onGetXY(int x,int y);
+    void on_recv_error();
+    void on_recv_newgame(bool f);
 };
 
 #endif // MAINWINDOW_H

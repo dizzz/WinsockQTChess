@@ -5,7 +5,7 @@
 #include<string>
 class SockData {
   public:
-    enum { HELLO, MOVE,RPS };
+    enum { HELLO, MOVE,RPS,NEW_GAME,BYE};
     int type;
     std::string content;
     SockData() {}

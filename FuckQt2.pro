@@ -27,8 +27,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     connectwaitdlg.cpp \
     basesock.cpp \
-    sendthread.cpp \
-    recvthread.cpp \
     sockdata.cpp\
     sockthread.cpp \
     connthread.cpp \
@@ -39,8 +37,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     connectwaitdlg.h \
     basesock.h \
-    sendthread.h \
-    recvthread.h \
     sockdata.h \
     sockthread.h \
     connthread.h \

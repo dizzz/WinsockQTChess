@@ -48,9 +48,9 @@ void outputMessage(QtMsgType type, const QMessageLogContext &context, const QStr
 int main(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
-
+    a.setQuitOnLastWindowClosed(true);
     //注册MessageHandler
-    qInstallMessageHandler(outputMessage);
+    //qInstallMessageHandler(outputMessage);
     // QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
     Common::startThread();
     MainWindow w;
@@ -60,9 +60,10 @@ int main(int argc, char *argv[]) {
     QObject::connect(Common::sockthread, SIGNAL(recvXY(int, int)), &w,
                      SLOT(onGetXY(int, int)));
     QObject::connect(Common::sockthread,SIGNAL(recvRPS(int)),&rpsdlg,SLOT(onGetRPS(int)));
+    QObject::connect(Common::sockthread,SIGNAL(sock_error()),&w,SLOT(on_recv_error()));
+    QObject::connect(Common::sockthread,SIGNAL(recvNewGame(bool)),&w,SLOT(on_recv_newgame(bool)));
 
     if (dlg.exec() == QDialog::Accepted) {
-
         if (rpsdlg.exec() == QDialog::Accepted) {
             if (rpsdlg.getFirst()) {
                 w.setPlaying(1);
@@ -76,28 +77,13 @@ int main(int argc, char *argv[]) {
                 Common::sockthread->setReceiving(1);
             }
             w.show();
-            //QMessageBox::information(this, "Title", "Connected");
             return a.exec();
         }
+        return 0;
     }else
         return 0;
 
-    /*
-    if (dlg.exec() == QDialog::Accepted) {
 
-        if(dlg.connthread->getType()==CLIENT){
-            w.setPlaying(1);
-
-            qDebug("play first");
-        }else{
-            qDebug("play seconbd");
-            w.setPlaying(0);
-            Common::sockthread->setReceiving(1);
-        }
-        w.show();
-        return a.exec();
-    } else
-        return 0; //如果没被按下，则不会进入主窗口，整个程序结束运行*/
 }
 //TODO必须等到双方都准备好再开始
 //可不可以在当我收到对方rps成功后，重发上次自己的rps

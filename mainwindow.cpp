@@ -7,12 +7,12 @@
 
 void MainWindow::setPlaying(int t) {
     playing = t;
-    qDebug("set playing %d",playing);
+    qDebug("set playing %d", playing);
 }
 int MainWindow::getPlaying() { return playing; }
-//void MainWindow::setPlayerType(int t) { playertype = t; }
-//int MainWindow::getPlayerType() { return playertype; }
-void MainWindow::setPlayer(int p){player = p;}
+// void MainWindow::setPlayerType(int t) { playertype = t; }
+// int MainWindow::getPlayerType() { return playertype; }
+void MainWindow::setPlayer(int p) { player = p; }
 void MainWindow::showinf() { qDebug("hahaha"); }
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -22,19 +22,19 @@ MainWindow::MainWindow(QWidget *parent)
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);*/
+    init();
+}
+void MainWindow::init(){
     memset(a, -1, sizeof(a));
+    mynewgame = hisnewgame = NOT_SET;
     //设置玩家颜色 flag为1 先行
-    colorflag = 1;
-    if (colorflag == 1) {
-        ui->Q1->setText("Green");
-    } else {
-        ui->Q1->setText("Red");
-    }
+    //
     Common::sockthread->start();
     player = 0;
 }
 void MainWindow::paintEvent(QPaintEvent *) {
-    //qDebug("fuck");
+    // qDebug("fuck");
+    ui->color->setText(player?"Red":"Green");
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing, true);
     int i, j;
@@ -61,107 +61,111 @@ void MainWindow::paintEvent(QPaintEvent *) {
         }
     }
 }
-void MainWindow::onGetXY(int x,int y){
+void MainWindow::on_recv_error(){
+        QMessageBox::critical(this,"Error","Connection Error");
+        Common::sockthread->closesock();
+}
+void MainWindow::onGetXY(int x, int y) {
 
-    //if(isplaying) return ;
+    // if(isplaying) return ;
     qDebug("play");
     a[x][y] = 1 - player;
-    update();
     playing = 1;
-    whowin(x,y);
+    update();
+    whowin(x, y);
 }
-void MainWindow::whowin(int x,int y){
-    if (isWin(x, y) == 1) {
-        update();
-        setEnabled(false);
-        QMessageBox::information(this, "Green Win", "Green Win",
-                                 QMessageBox::Ok);
+void MainWindow::whowin(int x, int y) {
+    bool gameover = 0;
+    if (hasRoom() == 0) {
+        QMessageBox::information(this, "Draw", "Draw!!!", QMessageBox::Ok);
+        gameover = 1;
     }
-    if (isWin(x, y) == 2) {
-        update();
+    int win = isWin(x,y);
+    if(win !=-1){
+        if (win == player) {
+            QMessageBox::information(this, "Win", "You Win!!!",
+                                     QMessageBox::Ok);
+        }
+        else{
+            QMessageBox::information(this, "Lose", "You Lose...", QMessageBox::Ok);
+
+          }
+        //只要等到两个人都发送玩不玩就可以了
+
         setEnabled(false);
-        QMessageBox::information(this, "Red Win", "Red Win",
-                                 QMessageBox::Ok);
+        gameover = 1;
     }
+    if(gameover){
+        post_game();
+        on_send_newgame();
+    }
+}
+void MainWindow::newgame(){
+    if(hisnewgame == YES && mynewgame == YES){
+        QMessageBox::information(this, "Game Over", "Game Not Over", QMessageBox::Ok);
+
+    }else{
+        QMessageBox::information(this, "Game Over", "Game Over", QMessageBox::Ok);
+    }
+    //this->close();
+}
+void MainWindow::on_recv_newgame(bool f){
+    hisnewgame = f?YES:NO;
+    if(mynewgame==NOT_SET) return;
+
+    newgame();
+}
+void MainWindow::on_send_newgame(){
+    if(hisnewgame==NOT_SET) return;
+    newgame();
+}
+
+void MainWindow::post_game(){
+    int ret = QMessageBox::information(this,"Another Game","Do you want another game?",QMessageBox::Ok,QMessageBox::No);
+    if(ret == QMessageBox::Ok){
+        Common::sockthread->sendMsg(SockData::NEW_GAME,"YES");
+        mynewgame=YES;
+    }else{
+        Common::sockthread->sendMsg(SockData::NEW_GAME,"NO");
+        mynewgame=NO;
+    }
+
 }
 void MainWindow::mouseReleaseEvent(QMouseEvent *e) {
-    qDebug("is it receving? %d",Common::sockthread->isReceiving());
-    qDebug("playing %d",playing);
-    if(!playing)
+    qDebug("is it receving? %d", Common::sockthread->isReceiving());
+    qDebug("playing %d", playing);
+    if (!playing)
         return;
-    ui->label->setVisible(false);
+    //ui->label->setVisible(false);
     int x, y;
     if (e->x() >= 200 && e->x() < 440 && e->y() >= 200 && e->y() < 440) {
         x = (e->x() - 200) / 80;
         y = (e->y() - 200) / 80;
         if (a[x][y] == -1) {
-            //a[x][y] = player++ % 2 + 1;
+            // a[x][y] = player++ % 2 + 1;
             a[x][y] = player;
-            qDebug("move: %d %d",x,y);
-            Common::sockthread->sendMsg(SockData::packXY(x,y));
+            qDebug("move: %d %d", x, y);
+            Common::sockthread->sendMsg(SockData::packXY(x, y));
             playing = 0;
         }
-        if (hasRoom() == 0) {
-            QMessageBox::information(this, "NoRoom", "NoRoom", QMessageBox::Ok);
-        }
-        whowin(x,y);
+
+        whowin(x, y);
     }
     update();
 }
 
 int MainWindow::isWin(int x, int y) {
-    if (f1(x, y) || f2(x, y) || f3(x, y) || f4(x, y)) {
-        if (a[x][y] == 1) {
-            return 1;
-        }
-        if (a[x][y] == 2) {
-            return 2;
-        }
-    }
-    return 0;
+    if (a[x][0] == a[x][1] && a[x][1] == a[x][2])
+        return a[x][y];
+    if (a[0][y] == a[1][y] && a[1][y] == a[2][y])
+        return a[x][y];
+    if (x == y && a[0][0] == a[1][1] && a[1][1] == a[2][2])
+        return a[x][y];
+    if (x == 2 - y && a[0][2] == a[1][1] && a[1][1] == a[2][0])
+        return a[x][y];
+    return -1;
 }
 
-int MainWindow::f1(int x, int y) {
-    int i;
-    for (i = 0; i < 3; i++) {
-        if (y - i >= 0 && y + 2 - i <= 0xF && a[x][y - i] == a[x][y + 1 - i] &&
-            a[x][y - i] == a[x][y + 2 - i])
-            return 1;
-    }
-    return 0;
-}
-
-int MainWindow::f2(int x, int y) {
-    int i;
-    for (i = 0; i < 3; i++) {
-        if (x - i >= 0 && x + 2 - i <= 0xF && a[x - i][y] == a[x + 1 - i][y] &&
-            a[x - i][y] == a[x + 2 - i][y])
-            return 1;
-    }
-    return 0;
-}
-
-int MainWindow::f3(int x, int y) {
-    int i;
-    for (i = 0; i < 3; i++) {
-        if (x - i >= 0 && y - i >= 0 && x + 2 - i <= 0xF && y + 2 - i <= 0xF &&
-            a[x - i][y - i] == a[x + 1 - i][y + 1 - i] &&
-            a[x - i][y - i] == a[x + 2 - i][y + 2 - i])
-            return 1;
-    }
-    return 0;
-}
-
-int MainWindow::f4(int x, int y) {
-    int i;
-    for (i = 0; i < 3; i++) {
-        if (x + i <= 0xF && y - i >= 0 && x - 2 + i >= 0 && y + 2 - i <= 0xF &&
-            a[x + i][y - i] == a[x - 1 + i][y + 1 - i] &&
-            a[x + i][y - i] == a[x - 2 + i][y + 2 - i])
-            return 1;
-    }
-    return 0;
-}
 bool MainWindow::hasRoom() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -175,5 +179,6 @@ bool MainWindow::hasRoom() {
 
 MainWindow::~MainWindow() {
     Common::sockthread->closesock();
+    delete Common::sockthread;
     delete ui;
 }

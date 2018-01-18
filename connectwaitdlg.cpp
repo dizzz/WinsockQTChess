@@ -18,16 +18,12 @@ ConnectWaitDlg::ConnectWaitDlg(QWidget *parent)
     connect(connthread,SIGNAL(sock_started()),this,SLOT(on_sock_started()));
 }
 void ConnectWaitDlg::on_sock_started(){
-
     qDebug("yes!!!!!");
-
     accept();
 }
 void ConnectWaitDlg::on_sock_error(){
     QMessageBox::information(this, "Title", "Socket Error!");
-    /*if(connthread != nullptr)
-        delete connthread;
-    connthread = new ConnThread();*/
+    ui->label_status->setText("");
 }
 void ConnectWaitDlg::on_ConnButton_clicked() {
     emit foo();
@@ -51,7 +47,8 @@ void ConnectWaitDlg::on_ConnButton_clicked() {
         ui->ipEdit->setFocus();
         return;
     }
-    qDebug("%s : %s : %d",connthread->getHost().c_str(),connthread->getPort().c_str(),connthread->getType());
+    ui->label_status->setText("Connecting");
+    //qDebug("%s : %s : %d",connthread->getHost().c_str(),connthread->getPort().c_str(),connthread->getType());
     connthread->start();
 
 }

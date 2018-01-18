@@ -20,6 +20,8 @@ class SockThread : public QThread {
     int getType() { return type; }
     void setType(int st) { type = st; }
     void closesock();
+    bool isSockRunning();
+    void setSockRunning(bool t);
     ~SockThread();
 
   private:
@@ -27,11 +29,14 @@ class SockThread : public QThread {
     std::queue<std::string> sendque;
     int type;
     bool receiving;
+    bool sock_running;
   signals:
     void server_started();
+    void sock_error();
     void recvXY(int x,int y);
     void recvRPS(int rps);
-    void recvRPSReady();
+    //void recvRPSReady();
+    void recvNewGame(bool f);
 };
 
 #endif // SOCKTHREAD_H
