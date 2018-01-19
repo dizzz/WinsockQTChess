@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <sockthread.h>
 #include"sockdata.h"
+#include"rpsdlg.h"
 #include"common.h"
 namespace Ui {
 class MainWindow;
@@ -21,35 +22,36 @@ public:
     enum{
         NOT_SET,YES,NO
     };
-    void paintEvent(QPaintEvent *);
-    void mouseReleaseEvent(QMouseEvent *);
+
     void startplay();
     //int getPlayerType();
     //oid setPlayerType(int t);
-    void setPlayer(int p);
-    void setPlaying(int t);
-    int getPlaying();
     void whowin(int x,int y);
+    void setPlayer(int p);
     void post_game();
     void on_send_newgame();
-    void newgame();
+    void newgame(bool f);
     void init();
+    void checkmate(bool flag);
+    void setTurnLabel(bool playing);
+    void updateScore();
   private:
     Ui::MainWindow *ui;
-    int colorflag;
-    int a[3][3];
-    int isWin(int, int);
-    bool hasRoom();
-    int player;
-    int playing;
+    //int colorflag;
+    //int player;//颜色
+
+    int myscore=0;//得分
+    int hisscore=0;
     //int playertype;
     int mynewgame;
     int hisnewgame;
    private slots:
     void showinf();
-    void onGetXY(int x,int y);
-    void on_recv_error();
+    void on_recv_cod(int sr,int sc,int tr,int tc);
+    void on_recv_error(int err);
     void on_recv_newgame(bool f);
+    void on_pushButton_clicked();
+    void on_recv_throw();
 };
 
 #endif // MAINWINDOW_H

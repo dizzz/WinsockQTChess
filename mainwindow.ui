@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>640</height>
+    <width>995</width>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,43 +17,111 @@
    <property name="mouseTracking">
     <bool>false</bool>
    </property>
-   <widget class="QLabel" name="Q1">
+   <widget class="QLabel" name="label_turn">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>100</y>
-      <width>60</width>
-      <height>16</height>
+      <x>0</x>
+      <y>460</y>
+      <width>331</width>
+      <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 10pt &quot;Roboto Mono&quot;;</string>
+    </property>
     <property name="text">
-     <string/>
+     <string>It's your turn to play</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>20</x>
       <y>40</y>
-      <width>171</width>
-      <height>16</height>
+      <width>251</width>
+      <height>271</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Your color:</string>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+margin: 10px;
+	font: 75 18pt &quot;Roboto Mono&quot;;
+padding: 20px;
+
+
+background-image: url(qt.png);
+background-position: top right;
+background-origin: content;
+background-repeat: none;
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>221</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 57 12pt &quot;Roboto Mono Medium&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string>Score Table</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_score">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>100</y>
+       <width>161</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 20pt &quot;Microsoft YaHei UI&quot;;</string>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
-   <widget class="QLabel" name="color">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>40</y>
-      <width>72</width>
-      <height>15</height>
+      <x>70</x>
+      <y>520</y>
+      <width>151</width>
+      <height>51</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">font: 57 12pt &quot;Roboto Mono Medium&quot;;
+</string>
+    </property>
     <property name="text">
-     <string/>
+     <string>THROW</string>
     </property>
    </widget>
   </widget>
@@ -62,7 +130,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
+     <width>995</width>
      <height>26</height>
     </rect>
    </property>

@@ -10,6 +10,9 @@ class SockThread : public QThread {
     Q_OBJECT
   public:
     // void init(const char *port);
+    enum{
+        CLIENT,SERVER
+    };
     void run();
     void receiveMsg(std::string &msg);
     void sendMsg(std::string msg);
@@ -24,18 +27,35 @@ class SockThread : public QThread {
     void setSockRunning(bool t);
     ~SockThread();
 
+
+
+    //int getType();
+    //void setType(int t);
+    std::string getHost();
+    void setHost(std::string t);
+    std::string getPort();
+    void setPort(std::string t);
+
+
   private:
     std::queue<std::string> recvque;
     std::queue<std::string> sendque;
     int type;
     bool receiving;
     bool sock_running;
+
+
+
+    //int type;
+    std::string host;
+    std::string port;
   signals:
-    void server_started();
-    void sock_error();
-    void recvXY(int x,int y);
+     void sock_started();
+    //void server_started();
+    void sock_error(int err);
+    void recv_cod(int sr,int sc,int tr,int tc);
     void recvRPS(int rps);
-    //void recvRPSReady();
+    void recvThrow();
     void recvNewGame(bool f);
 };
 

@@ -27,6 +27,7 @@ class RPSdlg : public QDialog {
     void on_scissorbtn_clicked();
     void onGetRPS(int rps);
     // void onGetReady();
+    void on_sock_error();
   private:
     Ui::RPSdlg *ui;
     bool waiting;

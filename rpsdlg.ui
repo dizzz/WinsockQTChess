@@ -13,13 +13,17 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">font: 12pt &quot;Roboto Mono&quot;;
+font: 75 10pt &quot;Roboto Mono&quot;;</string>
+  </property>
   <widget class="QPushButton" name="rockbtn">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>130</y>
-     <width>93</width>
-     <height>28</height>
+     <x>22</x>
+     <y>120</y>
+     <width>101</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -30,9 +34,9 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>130</y>
-     <width>93</width>
-     <height>28</height>
+     <y>120</y>
+     <width>111</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -42,10 +46,10 @@
   <widget class="QPushButton" name="scissorbtn">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>130</y>
-     <width>93</width>
-     <height>28</height>
+     <x>270</x>
+     <y>120</y>
+     <width>101</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">

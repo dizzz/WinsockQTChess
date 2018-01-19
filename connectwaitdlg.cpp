@@ -3,7 +3,7 @@
 #include "ui_connectwaitdlg.h"
 #include <QMessageBox>
 
-//ConnThread * ConnectWaitDlg::connthread = nullptr;
+//ConnThread * ConnectWaitDlg::Common::sockthread = nullptr;
 ConnectWaitDlg::ConnectWaitDlg(QWidget *parent)
     : QDialog(parent), ui(new Ui::ConnectWaitDlg) {
     ui->setupUi(this);
@@ -13,33 +13,39 @@ ConnectWaitDlg::ConnectWaitDlg(QWidget *parent)
     palette.setBrush(QPalette::Background, bkgnd);*
     this->setPalette(palette);*/
     ui->ipEdit->setFocus();
-    connthread = new ConnThread();
-    connect(connthread,SIGNAL(sock_error()),this,SLOT(on_sock_error()));
-    connect(connthread,SIGNAL(sock_started()),this,SLOT(on_sock_started()));
+    //Common::sockthread = new ConnThread();
+    //connect(Common::sockthread,SIGNAL(sock_error()),this,SLOT(on_sock_error()));
+    //connect(Common::sockthread,SIGNAL(sock_started()),this,SLOT(on_sock_started()));
 }
 void ConnectWaitDlg::on_sock_started(){
     qDebug("yes!!!!!");
     accept();
 }
 void ConnectWaitDlg::on_sock_error(){
-    QMessageBox::information(this, "Title", "Socket Error!");
+    //QMessageBox::information(this, "Title", "Socket Error!");
     ui->label_status->setText("");
+
 }
+void ConnectWaitDlg::closeEvent(QCloseEvent *event){
+    Common::sockthread->closesock();
+    //this->close();
+}
+
 void ConnectWaitDlg::on_ConnButton_clicked() {
-    emit foo();
-    if (connthread != nullptr && connthread->isRunning()) {
+    //emit foo();
+    if (Common::sockthread != nullptr && Common::sockthread->isSockRunning()) {
         QMessageBox::information(this, "Title", "Please Wait!!!");
         return;
     }
     QString ip = ui->ipEdit->text();
     QString port = ui->portEdit->text();
     if(!ip.isEmpty() && !port.isEmpty()){
-        connthread->setType(CLIENT);
-        connthread->setHost(ip.toStdString());
-        connthread->setPort(port.toStdString());
+        Common::sockthread->setType(SockThread::CLIENT);
+        Common::sockthread->setHost(ip.toStdString());
+        Common::sockthread->setPort(port.toStdString());
     } else if (!port.isEmpty()) {
-        connthread->setPort(port.toStdString());
-        connthread->setType(SERVER);
+        Common::sockthread->setPort(port.toStdString());
+        Common::sockthread->setType(SockThread::SERVER);
     } else {
         QMessageBox::information(this, "Title", "重新输入");
         ui->ipEdit->clear();
@@ -48,11 +54,12 @@ void ConnectWaitDlg::on_ConnButton_clicked() {
         return;
     }
     ui->label_status->setText("Connecting");
-    //qDebug("%s : %s : %d",connthread->getHost().c_str(),connthread->getPort().c_str(),connthread->getType());
-    connthread->start();
+    //qDebug("%s : %s : %d",Common::sockthread->getHost().c_str(),Common::sockthread->getPort().c_str(),Common::sockthread->getType());
+    Common::sockthread->start();
+    //Common::sockthread->start();
 
 }
 ConnectWaitDlg::~ConnectWaitDlg() {
-    delete connthread;
+    //delete Common::sockthread;
     delete ui;
 }

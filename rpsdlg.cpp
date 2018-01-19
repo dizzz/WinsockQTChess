@@ -40,6 +40,9 @@ void RPSdlg::onGetRPS(int rps) {
         hisrps = rps;
     }
 }
+void RPSdlg::on_sock_error(){
+    this->close();
+}
 void RPSdlg::on_rockbtn_clicked() {
     if (hisrps != -1) {
         judge();

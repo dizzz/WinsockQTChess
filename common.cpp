@@ -1,3 +1,5 @@
 #include"common.h">
 SockThread *Common::sockthread=nullptr;
-void Common::startThread() { sockthread = new SockThread(); }
+bool Common::playing=0;
+int Common::turn=0;
+void Common::createThread() { sockthread = new SockThread(); }

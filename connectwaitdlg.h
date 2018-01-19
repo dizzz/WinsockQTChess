@@ -4,9 +4,10 @@
 #define CONNECTWAITDLG_H
 // #include"sendthread.h"
 // #include"recvthread.h"
-#include"basesock.h"
-// #include"sockthread.h"
-#include"connthread.h"
+//#include"basesock.h"
+ #include"sockthread.h"
+//#include"connthread.h"
+#include<common.h>
 #include <QDialog>
 namespace Ui {
 class ConnectWaitDlg;
@@ -17,7 +18,7 @@ class ConnectWaitDlg : public QDialog
     Q_OBJECT
 
 public:
-    ConnThread *connthread;
+    //ConnThread *connthread;
     explicit ConnectWaitDlg(QWidget *parent = 0);
     ~ConnectWaitDlg();
 
@@ -28,7 +29,8 @@ private:
     // SendThread sdthread;
     // RecvThread rcthread;
     //SockThread scthread;
-
+protected:					//添加
+     void closeEvent(QCloseEvent *event);
 signals:
   void foo();
 private slots:
